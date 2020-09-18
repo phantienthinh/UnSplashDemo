@@ -1,4 +1,12 @@
 package com.example.unsplashdemo.fragment.viewmodel
 
-class DetailFragmentViewModel {
+import androidx.lifecycle.*
+
+class DetailFragmentViewModel: ViewModel() {
+
+    override fun onCleared() {
+        super.onCleared()
+        //destroy
+    }
+
 }
