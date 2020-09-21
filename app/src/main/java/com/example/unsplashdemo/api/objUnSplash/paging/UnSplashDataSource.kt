@@ -19,6 +19,7 @@ class UnSplashDataSource(private val apiServer: ApiServer) : PagingSource<Int, U
 
             val prevKey = if (currentLoadingKey == 1) null else currentLoadingKey - 1
 
+            Log.e(TAG, "load: $currentLoadingKey")
             return LoadResult.Page(
                 data = responseData,
                 prevKey = prevKey,

@@ -6,9 +6,9 @@ import com.example.unsplashdemo.api.objUnSplash.gson.Urls
 import com.example.unsplashdemo.api.objUnSplash.gson.User
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.io.Serializable
 
-class UnSplash {
+class UnSplash : Serializable {
     @SerializedName("id")
     @Expose
     var id: String? = null
@@ -79,5 +79,26 @@ class UnSplash {
 
     override fun equals(other: Any?): Boolean {
         return super.equals(other)
+    }
+
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + (createdAt?.hashCode() ?: 0)
+        result = 31 * result + (updatedAt?.hashCode() ?: 0)
+        result = 31 * result + (promotedAt?.hashCode() ?: 0)
+        result = 31 * result + (width ?: 0)
+        result = 31 * result + (height ?: 0)
+        result = 31 * result + (color?.hashCode() ?: 0)
+        result = 31 * result + (description?.hashCode() ?: 0)
+        result = 31 * result + (altDescription?.hashCode() ?: 0)
+        result = 31 * result + (urls?.hashCode() ?: 0)
+        result = 31 * result + (links?.hashCode() ?: 0)
+        result = 31 * result + (categories?.hashCode() ?: 0)
+        result = 31 * result + (likes ?: 0)
+        result = 31 * result + (likedByUser?.hashCode() ?: 0)
+        result = 31 * result + (currentUserCollections?.hashCode() ?: 0)
+        result = 31 * result + (sponsorship?.hashCode() ?: 0)
+        result = 31 * result + (user?.hashCode() ?: 0)
+        return result
     }
 }

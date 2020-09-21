@@ -7,24 +7,36 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.unsplashdemo.R
+import com.example.unsplashdemo.ReposLoadStateAdapter
+import com.example.unsplashdemo.Utils
 import com.example.unsplashdemo.api.ApiServer
+import com.example.unsplashdemo.api.objUnSplash.UnSplash
 import com.example.unsplashdemo.databinding.FragmentMainBinding
 import com.example.unsplashdemo.fragment.factory.MainFragmentViewModelFactory
+import com.example.unsplashdemo.fragment.repository.UnsplashRepository
 import com.example.unsplashdemo.fragment.viewmodel.MainFragmentViewModel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
-class MainFragment : Fragment(), View.OnClickListener {
+class MainFragment : Fragment(), onItemListener {
     lateinit var mainFragmentBinding: FragmentMainBinding
     lateinit var mainViewModel: MainFragmentViewModel
-    lateinit var mainListAdapter: MainListAdapter
+    private var mainListAdapter: MainListAdapter = MainListAdapter(this)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupViewModel()
+        setupView()
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,66 +45,69 @@ class MainFragment : Fragment(), View.OnClickListener {
     ): View? {
         mainFragmentBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        setupList()
+        lifecycleScope.launch {
+            mainListAdapter.loadStateFlow
+                // Only emit when REFRESH LoadState for RemoteMediator changes.
+                .distinctUntilChangedBy { it.refresh }
+                // Only react to cases where Remote REFRESH completes i.e., NotLoading.
+                .filter { it.refresh is LoadState.NotLoading }
+                .collect { mainFragmentBinding.mainFragmentRecyclerView.scrollToPosition(0) }
+        }
         return mainFragmentBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainFragmentBinding.mainFragmentDetailBt.setOnClickListener(this)
-        setupViewModel()
-        setupList()
-        setupView()
 
-//        Thread {
-//            val response = ApiServer.getApiServer()!!.getListImage(1, 30)
-//            var list = response
-//            Log.e("TAG", "onViewCreated: " + list?.size)
-//        }.start()
-
+        Log.e(TAG, "onViewCreated: ")
     }
 
     private fun setupViewModel() {
-        mainViewModel =
-            ViewModelProvider(
-                this,
-                MainFragmentViewModelFactory(ApiServer.getApiServer()!!)
-            )[MainFragmentViewModel::class.java]
+        mainViewModel = ViewModelProvider(
+            this,
+            MainFragmentViewModelFactory(UnsplashRepository(ApiServer.getApiServer()!!))
+        )[MainFragmentViewModel::class.java]
     }
 
 
     private fun setupView() {
-        lifecycleScope.launch {
-            mainViewModel.listData.collect {
-                Log.e("TAG", "setupView:  ")
+        mainViewModel.getListDataImageUnsplash().observe(this, Observer {
+            this.lifecycleScope.launch {
                 mainListAdapter.submitData(it)
             }
-            lifecycleScope.launch {
-                mainListAdapter.loadStateFlow.collectLatest { loadstate ->
-                    val loading = loadstate.refresh is LoadState.Loading
-                    val error = loadstate.refresh is LoadState.Error
-                    val notloading = loadstate.refresh is LoadState.NotLoading
-                    Log.e("TAG", "loading: $loading")
-                    Log.e("TAG", "setupView: $error")
-                    Log.e("TAG", "setupView: $notloading")
-                }
-            }
-        }
+        })
+
     }
 
     private fun setupList() {
-        mainListAdapter = MainListAdapter()
-        mainFragmentBinding.mainFragmentRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = mainListAdapter
-        }
+//        mainListAdapter = MainListAdapter(this)
+//        mainFragmentBinding.mainFragmentRecyclerView.adapter = mainListAdapter
+        mainFragmentBinding.mainFragmentRecyclerView.adapter =
+            mainListAdapter.withLoadStateHeaderAndFooter(
+                header = ReposLoadStateAdapter { mainListAdapter.retry() },
+                footer = ReposLoadStateAdapter { mainListAdapter.retry() }
+            )
     }
 
-    override fun onClick(p0: View?) {
-        when (p0) {
-            mainFragmentBinding.mainFragmentDetailBt -> {
-                findNavController().navigate(R.id.action_fragment_main_to_detailFragment)
-            }
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e(TAG, "onDestroy: ")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.e(TAG, "onDestroyView: ")
+    }
+
+
+    override fun onClickItem(unSplash: UnSplash) {
+        val bundle = Bundle()
+        bundle.putSerializable(Utils.VALUE_DATA, unSplash)
+        findNavController().navigate(R.id.action_fragment_main_to_detailFragment, bundle)
+    }
+
+    companion object {
+        private const val TAG = "MainFragment"
     }
 }

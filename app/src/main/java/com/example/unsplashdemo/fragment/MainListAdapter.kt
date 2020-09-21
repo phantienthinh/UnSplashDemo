@@ -1,43 +1,63 @@
 package com.example.unsplashdemo.fragment
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.unsplashdemo.R
 import com.example.unsplashdemo.api.objUnSplash.UnSplash
-import kotlinx.android.synthetic.main.list_item.view.*
+import com.example.unsplashdemo.databinding.ListItemBinding
 
-class MainListAdapter : PagingDataAdapter<UnSplash, MainListAdapter.ViewHolder>(DataDifferntiator) {
+class MainListAdapter(val listener: onItemListener) :
+    PagingDataAdapter<UnSplash, MainListAdapter.ItemUnSplatViewHolder>(DataDifferntiator) {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    lateinit var itemBinding: ListItemBinding
+    private var mContext: Context? = null
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.textViewName.text =
-            "${getItem(position)?.altDescription} ${getItem(position)?.urls?.small}"
-        holder.itemView.textViewEmail.text = getItem(position)?.id
+    inner class ItemUnSplatViewHolder(val binding: ListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bindData(unSplash: UnSplash) {
+            Glide.with(mContext!!).load(unSplash.urls?.small)
+                .into(binding.itemImage)
+
+            binding.root.setOnClickListener {
+                listener.onClickItem(unSplash)
+            }
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.list_item, parent, false)
+    override fun onBindViewHolder(holder: ItemUnSplatViewHolder, position: Int) {
+        holder.bindData(getItem(position)!!)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemUnSplatViewHolder {
+        mContext = parent.context
+        itemBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(mContext),
+            R.layout.list_item,
+            parent,
+            false
         )
+        return ItemUnSplatViewHolder(itemBinding)
     }
 
-    object DataDifferntiator : DiffUtil.ItemCallback<UnSplash>() {
+}
 
-        override fun areItemsTheSame(oldItem: UnSplash, newItem: UnSplash): Boolean {
-            return oldItem.id == newItem.id
-        }
+object DataDifferntiator : DiffUtil.ItemCallback<UnSplash>() {
 
-        override fun areContentsTheSame(oldItem: UnSplash, newItem: UnSplash): Boolean {
-            return oldItem == newItem
-        }
+    override fun areItemsTheSame(oldItem: UnSplash, newItem: UnSplash): Boolean {
+        return oldItem.id == newItem.id
     }
 
+    override fun areContentsTheSame(oldItem: UnSplash, newItem: UnSplash): Boolean {
+        return oldItem == newItem
+    }
+}
+
+interface onItemListener {
+    fun onClickItem(unSplash: UnSplash)
 }

@@ -1,15 +1,32 @@
 package com.example.unsplashdemo.fragment.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.unsplashdemo.api.ApiServer
-import com.example.unsplashdemo.api.objUnSplash.paging.UnSplashDataSource
+import com.example.unsplashdemo.api.objUnSplash.UnSplash
+import com.example.unsplashdemo.fragment.repository.UnsplashRepository
+import kotlinx.coroutines.flow.Flow
 
-class MainFragmentViewModel(private val apiService: ApiServer) : ViewModel() {
-    val listData = Pager(PagingConfig(pageSize = 30)) {
-        UnSplashDataSource(apiService)
-    }.flow.cachedIn(viewModelScope)
+class MainFragmentViewModel(
+    private val repository: UnsplashRepository
+) : ViewModel() {
+    private var currentQuery: String? = null
+    private var currentSearchResult: Flow<PagingData<UnSplash>>? = null
+
+    fun getListDataImageUnsplash(): LiveData<PagingData<UnSplash>> {
+        return repository.getImageResultStream().cachedIn(viewModelScope)
+    }
+
+//    fun searchUnsplachImage(queryString: String): Flow<PagingData<UnSplash>>? {
+//        val lastResult = currentSearchResult
+//        if (queryString == currentQuery && lastResult != null) {
+//            return lastResult
+//        }
+//        currentQuery = queryString
+//        return repository.getImageResultStream()
+//    }
+
+
 }

@@ -15,20 +15,12 @@
         android:background="#4CAF50"
         tools:context=".fragment.DetailFragment">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="detail fragment" />
+        <ImageView
+            android:id="@+id/fragment_detail_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="center" />
 
-        <Button
-            android:id="@+id/fragment_detail_back_bt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:text="back home" />
     </RelativeLayout>
 </layout>
 

@@ -18,11 +18,5 @@
         android:id="@+id/detailFragment"
         android:name="com.example.unsplashdemo.fragment.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" >
-        <action
-            android:id="@+id/action_detailFragment_to_fragment_main"
-            app:destination="@id/fragment_main"
-            app:popUpToInclusive="true"
-            app:popUpTo="@id/fragment_main" />
-    </fragment>
+        tools:layout="@layout/fragment_detail" />
 </navigation>
