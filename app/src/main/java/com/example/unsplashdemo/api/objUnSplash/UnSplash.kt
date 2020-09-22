@@ -1,9 +1,9 @@
 package com.example.unsplashdemo.api.objUnSplash
 
-import com.example.unsplashdemo.api.objUnSplash.gson.Links
-import com.example.unsplashdemo.api.objUnSplash.gson.Sponsorship
-import com.example.unsplashdemo.api.objUnSplash.gson.Urls
-import com.example.unsplashdemo.api.objUnSplash.gson.User
+import com.example.unsplashdemo.api.objUnSplash.gson.image.Links
+import com.example.unsplashdemo.api.objUnSplash.gson.image.Sponsorship
+import com.example.unsplashdemo.api.objUnSplash.gson.image.Urls
+import com.example.unsplashdemo.api.objUnSplash.gson.image.User
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

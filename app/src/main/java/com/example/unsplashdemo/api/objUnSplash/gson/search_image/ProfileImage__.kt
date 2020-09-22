@@ -1,9 +1,9 @@
-package com.example.unsplashdemo.api.objUnSplash.gson
+package com.example.unsplashdemo.api.objUnSplash.gson.search_image
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class ProfileImage_ {
+class ProfileImage__ {
     @SerializedName("small")
     @Expose
     var small: String? = null

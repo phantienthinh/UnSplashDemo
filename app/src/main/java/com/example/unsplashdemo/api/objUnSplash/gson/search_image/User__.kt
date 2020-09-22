@@ -1,9 +1,9 @@
-package com.example.unsplashdemo.api.objUnSplash.gson
+package com.example.unsplashdemo.api.objUnSplash.gson.search_image
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Sponsor {
+class User__ {
     @SerializedName("id")
     @Expose
     var id: String? = null
@@ -42,15 +42,15 @@ class Sponsor {
 
     @SerializedName("location")
     @Expose
-    var location: Any? = null
+    var location: String? = null
 
     @SerializedName("links")
     @Expose
-    var links: Links_? = null
+    var links: Links_____? = null
 
     @SerializedName("profile_image")
     @Expose
-    var profileImage: ProfileImage? = null
+    var profileImage: ProfileImage__? = null
 
     @SerializedName("instagram_username")
     @Expose

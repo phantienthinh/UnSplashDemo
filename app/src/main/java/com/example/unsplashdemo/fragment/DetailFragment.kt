@@ -16,7 +16,7 @@ import com.example.unsplashdemo.databinding.FragmentDetailBinding
 class DetailFragment : Fragment() {
 
     lateinit var detailBinding: FragmentDetailBinding
-    lateinit var unSplash: UnSplash
+    lateinit var unSplash: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,8 +29,8 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        unSplash = arguments?.getSerializable(Utils.VALUE_DATA) as UnSplash
-        Glide.with(this).load(unSplash.urls?.regular).into(detailBinding.fragmentDetailImage)
+        unSplash = arguments?.getString(Utils.VALUE_DATA,"")!!
+        Glide.with(this).load(unSplash).into(detailBinding.fragmentDetailImage)
     }
 
 }

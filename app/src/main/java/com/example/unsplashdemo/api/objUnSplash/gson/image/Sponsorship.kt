@@ -1,4 +1,4 @@
-package com.example.unsplashdemo.api.objUnSplash.gson
+package com.example.unsplashdemo.api.objUnSplash.gson.image
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

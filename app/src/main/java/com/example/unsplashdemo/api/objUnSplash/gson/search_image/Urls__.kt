@@ -1,9 +1,9 @@
-package com.example.unsplashdemo.api.objUnSplash.gson
+package com.example.unsplashdemo.api.objUnSplash.gson.search_image
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Urls {
+class Urls__ {
     @SerializedName("raw")
     @Expose
     var raw: String? = null

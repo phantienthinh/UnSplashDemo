@@ -1,9 +1,9 @@
-package com.example.unsplashdemo.api.objUnSplash.gson
+package com.example.unsplashdemo.api.objUnSplash.gson.search_image
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Links_ {
+class Links_____ {
     @SerializedName("self")
     @Expose
     var self: String? = null

@@ -25,13 +25,14 @@ class MainListAdapter(val listener: onItemListener) :
                 .into(binding.itemImage)
 
             binding.root.setOnClickListener {
-                listener.onClickItem(unSplash)
+                listener.onClickItem(unSplash.urls?.small!!)
             }
         }
     }
 
     override fun onBindViewHolder(holder: ItemUnSplatViewHolder, position: Int) {
-        holder.bindData(getItem(position)!!)
+        val item = getItem(position)
+        holder.bindData(item!!)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemUnSplatViewHolder {
@@ -59,5 +60,5 @@ object DataDifferntiator : DiffUtil.ItemCallback<UnSplash>() {
 }
 
 interface onItemListener {
-    fun onClickItem(unSplash: UnSplash)
+    fun onClickItem(string: String)
 }
