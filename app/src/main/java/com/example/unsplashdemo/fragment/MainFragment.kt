@@ -113,18 +113,19 @@ class MainFragment : Fragment(), onItemListener,
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-//        mainFragmentBinding.mainFragmentRecyclerView.adapter =
         return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
+        val b = newText != null && newText.isEmpty()
         job?.cancel()
         mainFragmentBinding.mainFragmentRecyclerView.adapter =
             mainSearchListAdapter.withLoadStateHeaderAndFooter(
                 header = ReposLoadStateAdapter { mainListAdapter.retry() },
                 footer = ReposLoadStateAdapter { mainListAdapter.retry() }
             )
-        val searchUnSplashImage = mainViewModel.searchUnSplashImage(newText!!)
+        val searchUnSplashImage =
+            mainViewModel.searchUnSplashImage(if (b) "beautiful" else newText!!)
         searchUnSplashImage?.observe(this, Observer {
             job = this.viewLifecycleOwner.lifecycleScope.launch {
                 mainSearchListAdapter.submitData(it)
